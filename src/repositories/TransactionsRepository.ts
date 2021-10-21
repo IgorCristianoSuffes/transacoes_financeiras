@@ -7,6 +7,12 @@ interface Balance {
   total: number;
 }
 
+interface CreateTransactionDTO {
+  title: string;
+  value: number;
+  type: "income" | "outcome";
+}
+
 class TransactionsRepository {
   private transactions: Transaction[];
 
@@ -18,43 +24,33 @@ class TransactionsRepository {
     return this.transactions;
   }
 
-  public getBalance(): number {
+  public getBalance(): Balance {
+    const { income, outcome } = this.transactions.reduce((accumulator: Balance, transaction: Transaction) => {
+      switch ( transaction.type ) {
+        case "income":
+          accumulator.income += transaction.value;
+          break;
+        case "outcome":
+          accumulator.outcome += transaction.value;
+          break;
+        default:
+          break;
+      }
+      return accumulator;
+    }, {
+      income: 0,
+      outcome: 0,
+      total: 0
+    });
 
-    /*const array = this.transactions;
-    const array2 = this.transactions;
-    
-    const incomeSum = array.filter
-      ((transactions) => transactions.type === 'income').
-      map((income) => income.value ++).
-      reduce((total, income) => total += income);
+    const total = income-outcome;
 
-    const outcomeSum = array2.filter
-      ((transactions) => transactions.type === 'outcome').
-      map((outcome) => outcome.value ++).
-      reduce((total, outcome) => total += outcome);
 
-    const totalSum = incomeSum-outcomeSum;
-
-    return totalSum;*/
-
-return 1;
-    
+    return { income, outcome, total};
   }
 
-  public create(title: string, value: number, type: 'income' | 'outcome'): Transaction {
+  public create({ title, value, type }: CreateTransactionDTO): Transaction {
     const transaction = new Transaction({title, value, type});
-
-    const balance: Balance;
-
-    if (type === "income") {
-
-      balance = {
-        income: value;
-        outcome: value;
-        total: income - outcome;
-      };
-
-    }
 
     this.transactions.push(transaction);
 
