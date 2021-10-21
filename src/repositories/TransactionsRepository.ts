@@ -18,16 +18,45 @@ class TransactionsRepository {
     return this.transactions;
   }
 
-  public getBalance(): Balance {
-    const validBalnce = this.transactions.find
+  public getBalance(): number {
+
+    /*const array = this.transactions;
+    const array2 = this.transactions;
+    
+    const incomeSum = array.filter
+      ((transactions) => transactions.type === 'income').
+      map((income) => income.value ++).
+      reduce((total, income) => total += income);
+
+    const outcomeSum = array2.filter
+      ((transactions) => transactions.type === 'outcome').
+      map((outcome) => outcome.value ++).
+      reduce((total, outcome) => total += outcome);
+
+    const totalSum = incomeSum-outcomeSum;
+
+    return totalSum;*/
+
+return 1;
+    
   }
 
   public create(title: string, value: number, type: 'income' | 'outcome'): Transaction {
     const transaction = new Transaction({title, value, type});
 
-    this.transactions.push(transaction);
+    const balance: Balance;
 
-    console.log(this.transactions);
+    if (type === "income") {
+
+      balance = {
+        income: value;
+        outcome: value;
+        total: income - outcome;
+      };
+
+    }
+
+    this.transactions.push(transaction);
 
     return transaction;
   }

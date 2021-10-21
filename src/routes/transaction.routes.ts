@@ -14,8 +14,8 @@ transactionRouter.get('/', (request, response) => {
 
     return response.status(200).json(listTransaction);
     
-  } catch (err: any) {
-    return response.status(400).json({ error: err.message });
+  } catch {
+    return response.status(400).json({ error: "err.message" });
   }
 });
 
@@ -23,12 +23,20 @@ transactionRouter.post('/', (request, response) => {
   try {
     const { title, value, type } = request.body;
 
+    const validadBalance = transactionsRepository.getBalance();
+
+    console.log(validadBalance);
+
+    /*if (validadBalance < 0 || validadBalance === 0 && type === 'outcome') {
+      return response.status(400).json({ error: "err.message" });
+    }*/
+
     const transaction = transactionsRepository.create(title, value, type);
 
     return response.json(transaction);
 
-  } catch (err:any) {
-    return response.status(400).json({ error: err.message });
+  } catch {
+    return response.status(400).json({ error: "err.message" });
   }
 });
 
